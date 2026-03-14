@@ -1,0 +1,38 @@
+dnl --------------------------------------------------------------------
+dnl configure.in for scope, a serial line monitoring program.
+dnl
+dnl $Revision: 1.2 $  $Date: 2002/09/06 17:12:37 $
+dnl 
+dnl Copyright (c) 2002 by Matt J. Gumbley
+dnl --------------------------------------------------------------------
+
+AC_INIT(src/scope.c)
+AC_CANONICAL_SYSTEM
+AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE(scope, 0.03)
+
+
+dnl Checks for programs.
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+
+dnl Checks for functions
+AC_LANG_C
+
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+TYPE_SIZED_INTS
+
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/ioctl.h)
+
+
+AC_OUTPUT(
+	Makefile
+	src/Makefile
+)
+

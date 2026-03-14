@@ -22,6 +22,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include <config.h>
+
 #include "global.h"
 #include "util.h"
 #include "asy.h"
@@ -41,6 +43,7 @@ static int verbose = FALSE;
 static int continuous = FALSE;
 static int justdata = FALSE;
 static int animate = FALSE;
+static int rxonly = FALSE;
 
 void sighandler(int signal)
 {
@@ -49,7 +52,7 @@ void sighandler(int signal)
 
 static void banner()
 {
-  printf("scope v%2.2f - a simple serial line analyser\n", VERSION);
+  printf("scope v%s - a simple serial line analyser\n", VERSION);
   printf("(C) 1999,2000,2002 Matt J. Gumbley, matt@gumbley.demon.co.uk\n");
   printf("http://www.gumbley.demon.co.uk/scope.html\n\n");
 }
@@ -75,6 +78,9 @@ static void usage()
   printf("  -a        Animate a spinner on stderr when data is received.\n");
   printf("            Useful when redirecting to a file to see that\n");
   printf("            something is happening.\n");
+  printf("  -1        Receive data on p1 only. (Mnemonic: one port only.)\n");
+  printf("  -w 'str'  Writes out the string on the first port before\n");
+  printf("            monitoring. \\r and \\n are allowed (escape the \\)\n");
   exit(1);
 }
 
@@ -104,6 +110,8 @@ char *CTS=spaces3;
 char *DSR=spaces3;
 char *DCD=spaces3;
 char *DTR=spaces3;
+int numports;
+char *writeThis = NULL;
 
   /* Initialise sensible defaults, etc. */
   progname = argv[0];
@@ -164,6 +172,12 @@ char *DTR=spaces3;
           strncpy(ports[portch], ++p, PORTMAX);
           /* XXX: check existence, deviceness? */
           break;
+        case '1':
+          rxonly=TRUE;
+          break;
+        case 'w':
+	  writeThis = argv[++i];
+	  break;
         default:
           usage();
       }
@@ -176,7 +190,8 @@ char *DTR=spaces3;
   signal(SIGINT, &sighandler);
 
   /* Open ports */
-  for (i=0; i<2; i++) {
+	numports = (!rxonly) + 1;
+  for (i=0; i<numports; i++) {
     if ((portfds[i]=asy_open(ports[i], bps)) == -1) {
       printf("port %s open failed\n", ports[i]);
       exit(-1);
@@ -185,7 +200,34 @@ char *DTR=spaces3;
 
   if (verbose) {
     printf("rx port: %s at %s baud\n", ports[0], baudstr);
-    printf("tx port: %s\n", ports[1]);
+		if (rxonly) {
+			puts("no tx port; receiving only");
+		}
+		else {
+			printf("tx port: %s\n", ports[1]);
+		}
+  }
+
+  /* Write out any string the user has asked, escaping control chars */
+  if (writeThis) {
+    int len = strlen(writeThis);
+    for (i=0; i<len; i++) {
+      byte ch;
+      if (writeThis[i] == '\\' && i<len-1) {
+        switch (writeThis[i+1]) {
+          case 'n': ch = '\n'; break;
+          case 'r': ch = '\r'; break;
+          case 't': ch = '\t'; break;
+          case 'a': ch = '\a'; break;
+          case '\\': ch = '\\'; break;
+          default:  ch = writeThis[i+1];
+        }
+        i++;
+      }
+      else
+        ch = writeThis[i];
+      asy_write(portfds[0], &ch, 1);
+    }
   }
 
   signal(SIGINT, &sighandler);
@@ -197,6 +239,8 @@ char *DTR=spaces3;
     anything = continuous;
     for (i=0; i<2; i++) {
       strcpy(&rxcharbuf[i][0], spaces);
+		}
+    for (i=0; i<numports; i++) {
       if (asy_test(portfds[i])) {
         anything = TRUE;
         rxchar=asy_getc(portfds[i]);
@@ -225,7 +269,7 @@ char *DTR=spaces3;
       if (portstats[0] != lastportstats[0] ||
           portstats[1] != lastportstats[1])
         anything = TRUE;
-      for (i=0; i<2; i++)
+      for (i=0; i<numports; i++)
         lastportstats[i]=portstats[i];
     }
 

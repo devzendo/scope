@@ -45,12 +45,24 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 Building and Installing
 =======================
+The program now uses GNU autoconf, thanks to Warren Young.
+To build, use the usual configure invocations; a 'configure --help' will show
+you what is supported.
 
-1) In the main directory (NOT src), type 'make'
-2) As 'root', in the main directory, type 'make install' to install the 
-   scope program under /usr/local/bin.
-   Edit the Makefile, and change PREFIX to whatever you need for your system.
+Typically, you may wish to place the program in a location other than its
+default. So, './configure --prefix=/wherever/you/want' is all that's needed.
 
+Once configuration is done, type 'make', and then 'make install'.
+
+For further information, refer to the file INSTALL, which is ripped verbatim
+from some other package which uses autoconf ;-)
+
+(Note to developers: the configure script supplied was generated with autoconf
+2.13-5 on a Red Hat 6.2/Intel system)
+
+Specific configure options for this program
+-------------------------------------------
+There are none, yet.
 
 
 How to Use Scope
@@ -111,7 +123,6 @@ with this, don't blame me - it works fine (ish) for me.
 TODO
 ====
 
-* Put it all under GNU autoconf
 * Make it work properly on Intel Linux (CRTSCTS undeclared for some reason)
   - this ioctl option is not used on Intel. Add #define CONFIG_M386 in global.h
     to make this work.

@@ -1,3 +1,59 @@
+0.03 08/10/2002
+Added the following features, from a patch from Warren Young:
+
+<QUOTE>
+- It adds the -1 command line argument, which makes it only read from 
+one serial port.  I needed this because I was just interested in making it show
+me what a particular program was sending.
+
+- autoconfiscation consequence #1: all the -DUNIX and -DLINUX stuff is 
+gone.
+
+- consequence #2: The old CRTSCTS check is also removed, as it doesn't 
+seem necessary.  It must have been a bug in the old Linux headers, since 
+that's POSIX standard, I think. (*) The code as it is now works on both 
+RH6.2 and 7.3.  If you have a platform where this still breaks, there 
+are better ways of handling this problem with autoconf than 
+platform-specific ifdefs.  I can help you code up the necessary autoconf 
+invocations if you don't want to take the time to figure it out yourself.
+
+- consequence #3: The "byte" and similar typedefs are now based on the 
+reasonably-portable u_int8_t and similar types usually found in 
+sys/types.h.  If you have a platform that doesn't have these typedefs, 
+again, there are ways to extend autoconf to detect that platform's sized 
+int typedef style.
+
+- I removed several skeleton files like 'src/header'.  I don't think 
+they belong in a source distribution.
+
+- Obviously the makefile structure is now different.  A lot of the code 
+you had in your makefiles is replaced by autoconf.  For example, the 
+"forwarding" targets so that "make clean" in the top level also does a 
+clean in src.  Also things like VERSION and the install directory stuff 
+already exist in autoconf/automake.
+
+- Several of the Makefile targets weren't ported to automake, like the 
+backup one.  If you still want these, just add them to Makefile.am.  You 
+might check to see if there's an equivalent already, though.  The "tar 
+up the source code" target isn't needed any more, for example, because 
+"make dist" will do what you want now.  (Or if it doesn't, it can be 
+fixed so that it does, rather than replacing the target with a 
+hand-rolled version.)
+</QUOTE>
+
+Many thanks, Warren!
+
+(*) Matt thinks this may have been a Sparc Red Hat Linux 6.0 thing; he's not
+bothered about that version, since he's on 6.2 now. If this is an issue for you,
+earlier versions of scope are availabel from the project home page.
+
+Added -w "write this string" option, which writes the given string out on the
+first port, then starts monitoring. You can include returns, e.g.:
+-w "AT&V\\r" which on some modems will cause a settings dump to be generated.
+
+
+
+
 0.02 20/02/2002
 Added fix for compile error on RH7.x, from a patch by Grant Edwards: "The
 'timezone' struct has been obsoleted, so I've jettisoned it.  Passing a NULL for

@@ -15,6 +15,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include <config.h>
+
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -23,22 +25,15 @@
 #define FALSE 0
 #endif
 
-#ifdef LINUX
-typedef unsigned char  byte;
-typedef unsigned short word16;
-typedef signed short sword16;
-typedef unsigned int   word32;
-#define BYTE byte
-#define WORD16 word16
-#define SWORD16 sword16
-#define WORD32 word32
-
-/* Define this for Intel Linux, since this doesn't have the ioctl CRTSCTS
- * constant.
- */
-#define CONFIG_M386
-
-#endif /* LINUX */
+#if defined(HAVE_SIZED_INT_TYPES)
+#include <sys/types.h>
+typedef u_int8_t byte;
+typedef u_int16_t word16;
+typedef u_int32_t word32;
+#else
+/* Shouldn't happen */
+#error Cannot compile program without sized int types!
+#endif
 
 #endif /* GLOBAL_H */
 

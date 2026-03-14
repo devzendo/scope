@@ -17,9 +17,6 @@
 
 #define DataTimeout 20
 
-/* This is for the CRTSCTS definition that doesn't work on Intel */
-#include <linux/config.h>
-
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/times.h>
@@ -85,11 +82,7 @@ int asy_open(char *Port, int Baud)
 
   (void) ioctl (fd, TCGETA, &OriginalSerialParameters);
 
-#ifdef CONFIG_M386
-  SerialParameters.c_cflag = Baud | CS8 | CLOCAL | CREAD;
-#else
   SerialParameters.c_cflag = Baud | CS8 | CLOCAL | CREAD | CRTSCTS;
-#endif
   SerialParameters.c_lflag = 0;
   SerialParameters.c_oflag = 0;
   SerialParameters.c_iflag = IGNBRK | IGNPAR;

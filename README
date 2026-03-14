@@ -1,0 +1,115 @@
+Scope: A Serial Line Analyser/Logger for Linux 
+    (and possibly other UNIX systems)
+==============================================
+
+(C) 1999, Matt J Gumbley
+Email: matt@gumbley.demon.co.uk
+http://www.gumbley.demon.co.uk/scope.html
+
+
+
+Introduction
+============
+Scope is a general-purpose serial line monitor, capable of recording the traffic
+on an RS232 cable (if provided with a suitable cable and recording computer).
+
+
+Tested On...
+------------
+It was written for Red Hat Linux 4.2/Sparc, Red Hat Linux 6.0/Sparc,
+although it should also compile on other UNIXes.
+
+
+Licensing
+---------
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+
+
+Building and Installing
+=======================
+
+1) In the main directory (NOT src), type 'make'
+2) As 'root', in the main directory, type 'make install' to install the 
+   scope program under /usr/local/bin.
+   Edit the Makefile, and change PREFIX to whatever you need for your system.
+
+
+
+How to Use Scope
+================
+Basically, scope will monitor /dev/ttyS0 and /dev/ttyS1, with output on 
+standard out, at 19200 bps. Use the -d option to suppress the control/status 
+line data (since that's not 100% working), and use other options to control
+speed, different ports, verbosity etc. 
+
+scope -h will give a short help file; there is no man page.
+
+Capture the output in a file, and use this as input to some of my other
+programs, such as ncpscope.
+
+
+The Special Serial Cable
+------------------------
+Scope works best when used in conjunction with a special serial cable. 
+
+This cable goes inline between the two devices that you want to monitor, and
+splits signals on the "main" line into two serial ports which are monitored
+simultaneously to provide a composite view of the current line status. 
+
+The cable I use connects to a Sun SparcStation 5, which has two serial ports,
+both D25's - similar to a PC. On a Sparc 10, the two ports (A/B) are housed in a
+single socket - the cable is wired as follows:
+
+SUN PORT A      FEMALE        MALE      SUN PORT B
+                  D25          D25       MALE D25
+                   1 - FG ----- 1 
+                   2 - TD ----- 2  ------ SRD 16
+ 3 - RD ---------  3 - RD ----- 3
+                   4 - RTS ---- 4  ----- SCTS 13
+ 5 - CTS --------  5 - CTS ---- 5
+ 6 - DSR --------  6 - DSR ---- 6
+ 7 - GND --------  7 - GND ---- 7
+ 8 - DCD --------  8 - DCD ---- 8
+                  20 - DTR ---- 20 ----- SDCD 12
+                  22 - RI ----- 22
+
+Basically, the first port is used to read most lines, and the second port is
+used to read TD, RTS and DTR, which are read on the input lines RD, CTS and DCD
+
+So wire the second plug:
+                                2 ----------- 3
+                                4 ----------- 5
+                               20 ----------- 8
+
+
+
+DISCLAIMER
+==========
+Standard disclaimer applies. If you blow up your systems
+with this, don't blame me - it works fine (ish) for me.
+
+
+
+TODO
+====
+
+* Put it all under GNU autoconf
+* Make it work properly on Intel Linux (CRTSCTS undeclared for some reason)
+  - this ioctl option is not used on Intel.
+* Use select(), don't poll.
+* Add pass-through mode (for Charlie Stross) - anything coming in on one port is
+  echoed to another.

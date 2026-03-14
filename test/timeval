@@ -1,0 +1,4 @@
+#!/usr/bin/perl
+# print the UNIX 32-bit time in hex
+$time = scalar time;
+printf("the time is $time, or 0x%08x\n", $time);

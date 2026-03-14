@@ -1,0 +1,9 @@
+#!/bin/sh
+PREF=$1
+shift
+for i in $*
+do
+	echo Removing $PREF/bin/$i
+#	rm -f $PREF/bin/$i
+done
+

@@ -32,7 +32,13 @@ typedef unsigned int   word32;
 #define WORD16 word16
 #define SWORD16 sword16
 #define WORD32 word32
-#endif
+
+/* Define this for Intel Linux, since this doesn't have the ioctl CRTSCTS
+ * constant.
+ */
+#define CONFIG_M386
+
+#endif /* LINUX */
 
 #endif /* GLOBAL_H */
 

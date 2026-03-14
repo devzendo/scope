@@ -4,16 +4,18 @@
 *** Purpose          : Utility functions
 *** Author           : Matt J. Gumbley
 *** Created          : 20/01/97
-*** Last updated     : 08/02/99
+*** Last updated     : 20/02/02
 ***
 ********************************************************************************
 ***
 *** Modification Record
+*** 20/02/02 MJG Build fixed for RH7.x, from a patch by Grant Edwards.
 ***
 *******************************************************************************/
 
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "global.h"
 #include "util.h"

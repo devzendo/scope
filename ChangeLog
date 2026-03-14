@@ -1,0 +1,13 @@
+0.02 20/02/2002
+Added fix for compile error on RH7.x, from a patch by Grant Edwards: "The
+'timezone' struct has been obsoleted, so I've jettisoned it.  Passing a NULL for
+the second parameter to gettimeofday is backward compatible at least as far back
+as RH6.  FWIW, I verified that the same change will work under Solaris (though
+asy.c doesn't compiler -- no surprise there). I've also added an "#include" or
+two to get rid of some warnings about implicit declarations of exit() and
+strcpy()."
+
+Thanks, Grant!
+
+
+

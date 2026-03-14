@@ -2,7 +2,7 @@ Scope: A Serial Line Analyser/Logger for Linux
     (and possibly other UNIX systems)
 ==============================================
 
-(C) 1999, Matt J Gumbley
+(C) 1999, 2000, 2001, 2002 Matt J Gumbley
 Email: matt@gumbley.demon.co.uk
 http://www.gumbley.demon.co.uk/scope.html
 
@@ -16,8 +16,12 @@ on an RS232 cable (if provided with a suitable cable and recording computer).
 
 Tested On...
 ------------
-It was written for Red Hat Linux 4.2/Sparc, Red Hat Linux 6.0/Sparc,
-although it should also compile on other UNIXes.
+It was written for:
+ Red Hat Linux 4.2/Sparc,
+ Red Hat Linux 6.0/Sparc,
+ Red Hat Linux 6.2/Intel
+although it should also compile on other UNIXes. You may need to make changes to
+asy.c.
 
 
 Licensing
@@ -109,7 +113,9 @@ TODO
 
 * Put it all under GNU autoconf
 * Make it work properly on Intel Linux (CRTSCTS undeclared for some reason)
-  - this ioctl option is not used on Intel.
+  - this ioctl option is not used on Intel. Add #define CONFIG_M386 in global.h
+    to make this work.
 * Use select(), don't poll.
 * Add pass-through mode (for Charlie Stross) - anything coming in on one port is
   echoed to another.
+

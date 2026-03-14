@@ -4,11 +4,12 @@
 *** Purpose          : Simple RS232-C Line Monitor/Analyser, uses special serial
 ***                    cable.
 *** Author           : Matt J. Gumbley
-*** Last updated     : 13/09/99
+*** Last updated     : 20/02/02
 ***
 ********************************************************************************
 ***
 *** Modification Record
+*** 20/02/02 MJG Build fixed for RH7.x, from a patch by Grant Edwards.
 ***
 *******************************************************************************/
 
@@ -19,6 +20,7 @@
 #include <ctype.h>
 #include <termios.h>
 #include <signal.h>
+#include <stdlib.h>
 
 #include "global.h"
 #include "util.h"
@@ -48,7 +50,7 @@ void sighandler(int signal)
 static void banner()
 {
   printf("scope v%2.2f - a simple serial line analyser\n", VERSION);
-  printf("(C) 1999 Matt J. Gumbley, matt@gumbley.demon.co.uk\n");
+  printf("(C) 1999,2000,2002 Matt J. Gumbley, matt@gumbley.demon.co.uk\n");
   printf("http://www.gumbley.demon.co.uk/scope.html\n\n");
 }
 
@@ -94,7 +96,6 @@ static char rxcharbuf[2][5];
 char *p;
 int bps;
 struct timeval tv;
-struct timezone tz;
 long startsecs;
 int anything;
 int result;
@@ -190,7 +191,7 @@ char *DTR=spaces3;
   signal(SIGINT, &sighandler);
   
   /* Record incoming data and control/status line changes */
-  gettimeofday(&tv, &tz);
+  gettimeofday(&tv,NULL);
   startsecs = tv.tv_sec;
   while (!quit) {
     anything = continuous;
@@ -232,7 +233,7 @@ char *DTR=spaces3;
     if (anything) {
       if (animate)
         spinner();
-      gettimeofday(&tv, &tz);
+      gettimeofday(&tv,NULL);
       if (justdata) {
               /* time      RD TD */
         printf("%6ld.%06ld|%s|%s\n", tv.tv_sec - startsecs, 

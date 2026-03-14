@@ -1,7 +1,7 @@
 #
 # The main Makefile for the Scope serial line analyser.
 # MJG 25/01/99
-# Last edit 12/09/99
+# Last edit 20/02/02
 
 .EXPORT_ALL_VARIABLES:
 
@@ -15,7 +15,7 @@ PREFIX = /usr/local
 #
 # (nothing special)
 
-VERSION = 0.01
+VERSION = 0.02
 NAME = scope-$(VERSION)
 DATE = `/bin/date +%d-%m-%Y`
 

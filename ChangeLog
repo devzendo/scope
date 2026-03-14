@@ -1,3 +1,7 @@
+0.04 04/11/2005
+Continuous mode now outputs --- lines when there's a delay in data being
+observed. Helps to distinguish between different packets.
+
 0.03 08/10/2002
 Added the following features, from a patch from Warren Young:
 

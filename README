@@ -2,9 +2,8 @@ Scope: A Serial Line Analyser/Logger for Linux
     (and possibly other UNIX systems)
 ==============================================
 
-(C) 1999, 2000, 2001, 2002 Matt J Gumbley
-Email: matt@gumbley.demon.co.uk
-http://www.gumbley.demon.co.uk/scope.html
+(C) 1999-2005 Matt J Gumbley
+http://www.gumbley.me.uk/scope.html
 
 
 
@@ -20,6 +19,8 @@ It was written for:
  Red Hat Linux 4.2/Sparc,
  Red Hat Linux 6.0/Sparc,
  Red Hat Linux 6.2/Intel
+ Red Hat Linux 9/Intel
+ Ubuntu Linux 5.04/Intel
 although it should also compile on other UNIXes. You may need to make changes to
 asy.c.
 

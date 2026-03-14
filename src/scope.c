@@ -112,6 +112,8 @@ char *DCD=spaces3;
 char *DTR=spaces3;
 int numports;
 char *writeThis = NULL;
+int firstblank = 0;
+int blank = 0;
 
   /* Initialise sensible defaults, etc. */
   progname = argv[0];
@@ -237,9 +239,10 @@ char *writeThis = NULL;
   startsecs = tv.tv_sec;
   while (!quit) {
     anything = continuous;
+    blank = 1;
     for (i=0; i<2; i++) {
       strcpy(&rxcharbuf[i][0], spaces);
-		}
+    }
     for (i=0; i<numports; i++) {
       if (asy_test(portfds[i])) {
         anything = TRUE;
@@ -247,6 +250,7 @@ char *writeThis = NULL;
         rxcharbuf[i][0]=hexdig((rxchar&0xf0)>>4);
         rxcharbuf[i][1]=hexdig(rxchar&0x0f);
         rxcharbuf[i][3]=isprint(rxchar) ? rxchar : '.';
+        blank = 0;
       }
       else {
         rxcharbuf[i][0]=rxcharbuf[i][1]=rxcharbuf[i][3]=' ';
@@ -256,7 +260,19 @@ char *writeThis = NULL;
         if ((result=ioctl(portfds[i], TIOCMGET, &portstats[i])) < 0)
           printf("Couldn't get port stats, error %d\n", result);
       }
-        
+    }
+    if (continuous) {
+      if (blank) {
+        if (!firstblank) {
+          continue;
+        }
+        for (i=0; i<numports; i++) {
+          rxcharbuf[i][0]=rxcharbuf[i][1]=rxcharbuf[i][3]='-';
+        }
+        firstblank = 0;
+      } else {
+        firstblank = 1;
+      }
     }
     if (!justdata) {
       /* Process line flags from first port */
